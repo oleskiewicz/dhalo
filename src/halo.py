@@ -12,11 +12,9 @@ def get(h, d):
     The implementation is idempotent, so that when it does receive an actual halo,
     it returns the unchanged data row.
 
-    Arguments:
-        h (int): ``nodeIndex`` queried
-        d (numpy.ndarray): DHalo tree data, as provided by :mod:`src.read`
-    Return:
-        h (numpy.ndarray): row of argument ``d`` of the given ``nodeIndex``
+    :param int h: ``nodeIndex`` queried
+    :param numpy.ndarray d: DHalo tree data, as provided by :mod:`src.read`
+    :return numpy.ndarray: row of argument ``d`` of the given ``nodeIndex``
     """
 
     if (type(h) == int or type(h) == np.int64):
@@ -27,8 +25,8 @@ def get(h, d):
     elif (type(h) == np.ndarray or type(h) == np.void):
         pass
     else:
-        raise TypeError("Halo must be either ID or a NumPy array, not %s" %
-                        (type(h)))
+        raise TypeError(
+            "Halo must be either ID or a NumPy array, not %s" % (type(h)))
     return h
 
 
@@ -42,8 +40,11 @@ def progenitors(h, d):
     - keep unique ones
     """
     h = get(h, d)
-    ps = filter(lambda h: h is not None, np.unique([host(prog, d) for prog in\
-     d[d['descendantHost'] == h['nodeIndex']]]))
+    ps = filter(
+        lambda h: h is not None,
+        np.unique([
+            host(prog, d) for prog in d[d['descendantHost'] == h['nodeIndex']]
+        ]))
     return ps
 
 
@@ -107,13 +108,13 @@ def display(h, d, level=1, recursive=False):
     progenitors, provided by :func:`progenitors`), or non-recursively, and
     then it only prints one halo and ``nodeIndex`` values of all progenitors.
 
-    Arguments:
-        h (int): ``nodeIndex`` queried
-        d (numpy.ndarray): DHalo tree data, as provided by :func:`src.read.data`
-        level (int): (default=1) used to increase level counter if printed
-            recursively
-        recursive (bool): (default=False) if ``True``, descends every time a foreign
-            key is encountered;  if ``False``, only prints the IDs
+    :param int h: ``nodeIndex`` queried
+    :param numpy.ndarray d: DHalo tree data, as provided by
+        :func:`src.read.data`
+    :param int level: (default=1) used to increase level counter if printed
+        recursively
+    :param bool recursive: (default=False) if ``True``, descends every time a
+        foreign key is encountered;  if ``False``, only prints the IDs
     """
 
     h = get(h, d)
@@ -125,18 +126,17 @@ def display(h, d, level=1, recursive=False):
     print("halo: %d" % (h['nodeIndex']))
     print("%ssnap: %d" % (ind, h['snapshotNumber']))
     print("%smass: %d" % (ind, mass(h, d)))
-    print("%shost: %s" %
-          (ind, "self"
-           if h['hostIndex'] == h['nodeIndex'] else str(h['hostIndex'])))
+    print("%shost: %s" % (ind, "self" if h['hostIndex'] == h['nodeIndex'] else
+                          str(h['hostIndex'])))
 
-    # SUBHALOES
+    # # SUBHALOES
     # print "%ssub: [%s]"%(ind, ",".join(map(str, subhaloes(h, d))))
 
-    # DESCENDANTS
+    # # DESCENDANTS
     # print "%sdesc: %d"%(ind, h[DESC])
     # print "%sdesc_host: %d"%(ind, h[DESC_HOST])
 
-    # PROGENITORS
+    # # PROGENITORS
     # hh = progenitors(h, d)
     # if (len(hh) > 0):
     #   if recursive:
