@@ -1,0 +1,11 @@
+repos:
+  # TODO: this throws import-error
+  # - repo: https://github.com/pre-commit/mirrors-pylint
+  #   rev: v1.9.1
+  #   hooks:
+  #     - id: pylint
+  - repo: https://github.com/ambv/black
+    rev: stable
+    hooks:
+      - id: black
+        args: [--line-length=80, --safe, --py36]
