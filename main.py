@@ -1,6 +1,6 @@
 #!/usr/bin/env python
-import yaml
 import defopt
+import yaml
 from dhalo import DHaloReader
 
 
