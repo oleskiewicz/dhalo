@@ -1,11 +1,13 @@
 """DHalo Reader module.
 """
 #!/usr/bin/env python
-import logging
+import yaml
+import logging, logging.config
 import numpy as np
 import h5py
 
-logging.basicConfig(level=logging.DEBUG)
+logging.config.dictConfig(yaml.load(open("./logging.yaml", "r")))
+logger = logging.getLogger("DHaloReader")
 
 
 class DHaloReader(object):
@@ -180,7 +182,7 @@ class DHaloReader(object):
             ]
         )
 
-        logging.debug(
+        logger.debug(
             "Reached halo %d with %d progenitor(s)",
             halo["nodeIndex"],
             len(progenitors),
@@ -222,11 +224,11 @@ class DHaloReader(object):
 
         cmh = []
         tree = self.tree_build(index)
-        logging.debug("Built tree for halo %d", index)
+        logger.debug("Built tree for halo %d", index)
         progenitors = np.array(
             [self.get_halo(p) for p in self.tree_flatten(tree)]
         )
-        logging.debug(
+        logger.debug(
             "Flattened tree for halo %d with %d progenitors",
             index,
             progenitors.size,
@@ -241,4 +243,7 @@ class DHaloReader(object):
                 if mass > nfw_f * mass_root:
                     sum_mass += mass
             cmh.append([root["nodeIndex"], snapshot, sum_mass])
+
+        logger.debug("Converted %d tree to CMH", index)
+
         return np.array(cmh)
