@@ -1,8 +1,9 @@
 #!/usr/bin/env python
-import sys
 import logging
-import h5py
+import sys
+
 import defopt
+import h5py
 import numpy as np
 import pandas as pd
 
@@ -95,14 +96,15 @@ def data(file, cache=False):
     :return numpy.ndarray: DHalo catalogue
     """
 
-    with h5py.File(file, 'r') as f:
+    with h5py.File(file, "r") as f:
 
         d = np.array(
-            zip(*[f['/haloTrees/%s' % col].value for col in columns]),
-            dtype=[(col, 'int64') for col in columns])
+            zip(*[f["/haloTrees/%s" % col].value for col in columns]),
+            dtype=[(col, "int64") for col in columns],
+        )
 
         if cache:
-            with open("cache.npy", 'w') as file_cache:
+            with open("cache.npy", "w") as file_cache:
                 np.save(file_cache, d)
 
         # if data_frame:
@@ -120,4 +122,4 @@ def retrieve(file="cache.py"):
         :func:`src.read.data`
     """
 
-    return np.load(open(file, 'r'))
+    return np.load(open(file, "r"))

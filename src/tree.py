@@ -1,14 +1,14 @@
 #!/usr/bin/env python
-import sys
 import fcntl
 import logging
+import sys
+
 import defopt
 import numpy as np
 import pandas as pd
-
-import src.read
-import src.halo
 import src.dot
+import src.halo
+import src.read
 
 logging.basicConfig(level=logging.DEBUG)
 
