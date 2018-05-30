@@ -1,17 +1,22 @@
 #!/usr/bin/env python
-import sys
 import logging
-import numpy as np
+import sys
 
 import halo
+import numpy as np
 
 
 def node(h, m, m0, nfw_f):
-    return "\t%d [label=\"%s (%d, %d, %d)\", style=filled, fillcolor=%s];\n" % (
-        h['nodeIndex'], "%d" % (h['nodeIndex'])
-        if h['descendantIndex'] == h['descendantHost'] else "%d > %d" %
-        (h['nodeIndex'], h['descendantIndex']), h['isMainProgenitor'], m,
-        h['snapshotNumber'], "green" if m > nfw_f * m0 else "red")
+    return '\t%d [label="%s (%d, %d, %d)", style=filled, fillcolor=%s];\n' % (
+        h["nodeIndex"],
+        "%d" % (h["nodeIndex"])
+        if h["descendantIndex"] == h["descendantHost"]
+        else "%d > %d" % (h["nodeIndex"], h["descendantIndex"]),
+        h["isMainProgenitor"],
+        m,
+        h["snapshotNumber"],
+        "green" if m > nfw_f * m0 else "red",
+    )
 
 
 def tree(file, t, d, m0, nfw_f):
@@ -52,7 +57,15 @@ def mah(file, m, progs):
     """
     file.write("\t%s;" % (" -> ".join(["snap_%03d\n" % (s[1]) for s in m])))
     for s in m:
+        file.write('\tsnap_%03d [label="(%d, %03d)"];\n' % (s[1], s[2], s[1]))
         file.write(
-            "\tsnap_%03d [label=\"(%d, %03d)\"];\n" % (s[1], s[2], s[1]))
-        file.write("\t{ rank=same; snap_%03d; %s };" % (s[1], "; \n".join(
-            map(str, progs[progs['snapshotNumber'] == s[1]]['nodeIndex']))))
+            "\t{ rank=same; snap_%03d; %s };"
+            % (
+                s[1],
+                "; \n".join(
+                    map(
+                        str, progs[progs["snapshotNumber"] == s[1]]["nodeIndex"]
+                    )
+                ),
+            )
+        )

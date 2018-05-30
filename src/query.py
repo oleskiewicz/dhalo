@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 import sys
-import numpy as np
 
-import read
 import halo
+import numpy as np
+import read
 
 
 def process(data, query):
@@ -32,29 +32,28 @@ def process(data, query):
         data (numpy.ndarray): dataset provided by :mod:`src.read` module
         query (dict): query to be processed (see `Example`)
     """
-    #TODO: h['hostIndex'] -> halo.host(h, data)['nodeIndex'] gives TypeError
-    return np.unique([h['hostIndex'] for h in \
-     data[data[query['filter']['by']] == query['filter']['value']]])
+    # TODO: h['hostIndex'] -> halo.host(h, data)['nodeIndex'] gives TypeError
+    return np.unique(
+        [
+            h["hostIndex"]
+            for h in data[
+                data[query["filter"]["by"]] == query["filter"]["value"]
+            ]
+        ]
+    )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     d = read.data(sys.artgv[2])
 
     q = {
-        'filter': {
-            'by': 'snapshotNumber',
-            'value': 63,
-        },
-        'limit': {
-            'n': -1,
-        },
-        'select': {
-            'by': 'nodeIndex',
-        },
+        "filter": {"by": "snapshotNumber", "value": 63},
+        "limit": {"n": -1},
+        "select": {"by": "nodeIndex"},
     }
 
     ids = process(d, q)
 
-    with open(sys.argv[1], 'w') as f:
+    with open(sys.argv[1], "w") as f:
         for i in ids:
             f.write("%d\n" % i)

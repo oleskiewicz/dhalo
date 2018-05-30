@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import sys
+
 import pandas as pd
 
 
@@ -49,13 +50,12 @@ def cast(data):
     Returns:
         pandas.DataFrame: output MAH DataFrame in a wide format
     """
-    return data.pivot_table(\
-     values='particleNumber',\
-     index='nodeIndex',
-     columns='snapshotNumber')
+    return data.pivot_table(
+        values="particleNumber", index="nodeIndex", columns="snapshotNumber"
+    )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     tsv = sys.argv[1]
     long = pd.read_csv(tsv, sep="\t")
     wide = cast(long)
