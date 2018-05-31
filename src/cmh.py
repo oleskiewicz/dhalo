@@ -7,6 +7,7 @@ import defopt
 import pandas as pd
 import yaml
 from dhalo import DHaloReader
+from util import pmap
 
 logging.config.dictConfig(yaml.load(open("./logging.yaml", "r")))
 logger = logging.getLogger("main")
@@ -23,7 +24,7 @@ def main(filename, ids, nfw_f=0.02):
     logger.debug("Initialised reader for %s file", filename)
 
     pd.concat(
-        map(lambda i: reader.collapsed_mass_history(i, nfw_f), ids)
+        pmap(lambda i: reader.collapsed_mass_history(i, nfw_f), ids)
     ).pivot_table(
         index="nodeIndex",
         values="particleNumber",
