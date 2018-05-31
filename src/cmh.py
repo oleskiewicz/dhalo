@@ -12,23 +12,26 @@ logging.config.dictConfig(yaml.load(open("./logging.yaml", "r")))
 logger = logging.getLogger("main")
 
 
-def main(filename, snapshot):
-    """Query IDs of haloes.
+def main(filename, ids, nfw_f=0.02):
+    """Compute CMH of a halo.
 
     :param str filename: HDF5 or cache file name.
-    :param int snapshot: Snapshot number
+    :param list[int] ids: list of nodeIndex values
+    :param float nfw_f: NFW f parameter
     """
     reader = DHaloReader(filename)
     logger.debug("Initialised reader for %s file", filename)
 
-    data = reader.data[reader.data["snapshotNumber"] == snapshot]
-
-    ids = data.loc[
-        [reader.halo_host(i).name for i in data.index]
-    ].index.unique()
-
-    for i in ids:
-        sys.stdout.write("%d\n" % i)
+    pd.concat(
+        map(lambda i: reader.collapsed_mass_history(i, nfw_f), ids)
+    ).pivot_table(
+        index="nodeIndex",
+        values="particleNumber",
+        columns="snapshotNumber",
+        fill_value=0,
+    ).to_csv(
+        sys.stdout, index=True, index_label="nodeIndex"
+    )
 
 
 if __name__ == "__main__":

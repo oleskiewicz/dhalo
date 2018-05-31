@@ -1,33 +1,16 @@
-SRC:=./src/dhalo
-OUT:=./output/dhalo
-# IDS:=$(shell cat $(OUT)/ids.txt)
-IDS:=37048400000752
+SNAP?=013
+DATA?=./data/cache.pkl
+NFW_f?=002
 
-plots: $(foreach ID,$(IDS),./plots/cmh_$(ID).pdf)
-cmh: ./plots/cmh.pdf
-ids: $(OUT)/ids.txt
+ids: ./out/ids.$(SNAP).txt
+cmh: ./out/cmh.$(SNAP).f$(NFW_f).txt
 
-$(OUT)/ids.txt: $(SRC)/query.py
-	python $< $@
+./out/ids.$(SNAP).txt: ./query.py $(DATA)
+	python $< $(DATA) $(SNAP) > $@
 
-./plots/cmh_%.pdf: $(OUT)/cmh_%.dot
-	dot -Tpdf -o $@ $<
-
-$(OUT)/cmh_%.dot: $(SRC)/tree.py
-	python $< $* $(OUT)/cmh.tsv
-
-./plots/cmh.pdf: $(SRC)/plot.py $(OUT)/cmh.tsv
-	python $< $(word 2,$^) $@
-
-# only re-run after running submit.csh on new set if ids
-$(OUT)/cmh.tsv: $(SRC)/forge.py
-	python $< $@
-
-clean:
-	rm -f $(OUT)/*.dot
-
-purge:
-	rm -f $(OUT)/*
-
-.PHONY: plots cmh purge clean docs
-.PRECIOUS: $(OUT)/cmh_%.dot $(OUT)/cmh_%.tsv
+./out/cmh.$(SNAP).f$(NFW_f).txt: ./main.py ./out/ids.$(SNAP).txt $(DATA)
+	python $< \
+		$(DATA) \
+		$(shell echo "$(NFW_f) / 100" | bc -l) \
+		-i $(shell cat ./out/ids.$(SNAP).txt | paste -s -d' ') \
+		> $@

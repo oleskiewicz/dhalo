@@ -120,6 +120,12 @@ class DHaloReader(object):
             _progenitor_ids = self.data[self.data["descendantHost"] == i][
                 "hostIndex"
             ].unique()
+            logger.debug(
+                "Progenitors recursion: %d > %d (%d progenitors)",
+                index,
+                i,
+                len(_progenitor_ids),
+            )
             if len(_progenitor_ids) == 0:
                 return
             for _progenitor_id in _progenitor_ids:
@@ -128,6 +134,10 @@ class DHaloReader(object):
                 rec(_progenitor_id)
 
         rec(index)
+
+        logger.info(
+            "%d progenitors found for halo %d", len(_progenitors), index
+        )
         return _progenitors
 
     def halo_host(self, index):
@@ -161,24 +171,35 @@ class DHaloReader(object):
             snapshotNumber, sum(particleNumber)]``
         """
 
-        logger.debug("Starting with halo %d", index)
-
+        logger.debug("Looking for halo %d", index)
         halo = self.get_halo(index)
         if halo["hostIndex"] != halo.name:
             raise ValueError("Not a host halo!")
         m_0 = self.halo_mass(index)
-        print("Found halo %d of mass %d", index, m_0)
+        logger.info("Found halo %d of mass %d", index, m_0)
 
+        logger.debug("Building progenitor sub-table for halo %d", index)
         progenitors = pd.concat(
             [
                 self.data[self.data.index == index],
                 self.data.loc[self.halo_progenitor_ids(index)],
             ]
         )
+        logger.info(
+            "Built progenitor sub-table for halo %d with %d members",
+            index,
+            progenitors.size,
+        )
+
         progenitors = progenitors[progenitors["particleNumber"] > nfw_f * m_0]
         cmh = progenitors.groupby("snapshotNumber", as_index=False)[
             "particleNumber"
         ].sum()
         cmh["nodeIndex"] = index
+        logger.info(
+            "Summed masses of %d remaining progenitors of halo %d",
+            progenitors.size,
+            index,
+        )
 
         return cmh
