@@ -10,21 +10,25 @@ from dhalo import DHaloReader
 from util import pmap
 
 logging.config.dictConfig(yaml.load(open("./logging.yaml", "r")))
-logger = logging.getLogger("main")
+logger = logging.getLogger(__name__)
 
 
-def main(filename, ids, nfw_f=0.02):
+def main(data_file, ids_file, nfw_f=0.02):
     """Compute CMH of a halo.
 
-    :param str filename: HDF5 or cache file name.
-    :param list[int] ids: list of nodeIndex values
+    :param str data_file: HDF5 or cache file name.
+    :param str ids_file: text file with nodeIndex values
     :param float nfw_f: NFW f parameter
     """
-    reader = DHaloReader(filename)
-    logger.debug("Initialised reader for %s file", filename)
+
+    ids = pd.read_table(ids_file).values[:, 0]
+    logger.info("Loaded %d ids from %s", len(ids), ids_file)
+
+    reader = DHaloReader(data_file)
+    logger.info("Initialised reader for %s file", data_file)
 
     pd.concat(
-        pmap(lambda i: reader.collapsed_mass_history(i, nfw_f), ids)
+        pmap(lambda i: reader.collapsed_mass_history(i, nfw_f), ids, 8)
     ).pivot_table(
         index="nodeIndex",
         values="particleNumber",
@@ -33,6 +37,8 @@ def main(filename, ids, nfw_f=0.02):
     ).to_csv(
         sys.stdout, index=True, index_label="nodeIndex"
     )
+
+    logger.info("Pivoted CMHs for %d haloes, exiting.", len(ids))
 
 
 if __name__ == "__main__":

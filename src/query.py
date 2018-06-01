@@ -9,7 +9,7 @@ import yaml
 from dhalo import DHaloReader
 
 logging.config.dictConfig(yaml.load(open("./logging.yaml", "r")))
-logger = logging.getLogger("main")
+logger = logging.getLogger(__name__)
 
 
 def main(filename, snapshot):
@@ -18,6 +18,7 @@ def main(filename, snapshot):
     :param str filename: HDF5 or cache file name.
     :param int snapshot: Snapshot number
     """
+
     reader = DHaloReader(filename)
     logger.debug("Initialised reader for %s file", filename)
 

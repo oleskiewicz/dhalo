@@ -2,13 +2,12 @@
 """
 #!/usr/bin/env python
 import yaml
-import logging, logging.config
+import logging
 import numpy as np
 import pandas as pd
 import h5py
 
-logging.config.dictConfig(yaml.load(open("./logging.yaml", "r")))
-logger = logging.getLogger("DHaloReader")
+logger = logging.getLogger(__name__)
 
 
 class DHaloReader(object):
@@ -176,18 +175,17 @@ class DHaloReader(object):
         if halo["hostIndex"] != halo.name:
             raise ValueError("Not a host halo!")
         m_0 = self.halo_mass(index)
-        logger.info("Found halo %d of mass %d", index, m_0)
 
-        logger.debug("Building progenitor sub-table for halo %d", index)
         progenitors = pd.concat(
             [
                 self.data[self.data.index == index],
                 self.data.loc[self.halo_progenitor_ids(index)],
             ]
         )
-        logger.info(
-            "Built progenitor sub-table for halo %d with %d members",
+        logger.debug(
+            "Built progenitor sub-table for halo %d of mass %d with %d members",
             index,
+            m_0,
             progenitors.size,
         )
 
@@ -197,7 +195,7 @@ class DHaloReader(object):
         ].sum()
         cmh["nodeIndex"] = index
         logger.info(
-            "Summed masses of %d remaining progenitors of halo %d",
+            "Aggregated masses of %d valid progenitors of halo %d",
             progenitors.size,
             index,
         )
