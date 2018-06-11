@@ -2,4 +2,5 @@ defopt
 h5py
 numpy
 pandas
+pyyaml
 sphinx
