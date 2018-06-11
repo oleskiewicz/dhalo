@@ -8,7 +8,7 @@ import defopt
 import pandas as pd
 import yaml
 from dhalo import DHaloReader
-from util import pmap
+from src.util import pmap
 
 logging.config.dictConfig(
     yaml.load(

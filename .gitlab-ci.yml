@@ -5,6 +5,7 @@ pages:
     - apt-get update
     - apt-get install -y make
     - pip install -r requirements.txt
+    - pip install -e .
     - cd docs; make html
     - mv build/html ../public/
   artifacts:
