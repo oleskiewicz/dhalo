@@ -1,0 +1,12 @@
+image: python:alpine
+
+pages:
+  script:
+    - pip install sphinx
+    - apk --no-cache add make
+    - cd ./docs; make html
+  artifacts:
+    paths:
+      - docs/build/html
+  only:
+    - master

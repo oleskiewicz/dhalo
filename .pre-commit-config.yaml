@@ -18,4 +18,4 @@ repos:
     rev: stable
     hooks:
       - id: black
-        args: [--line-length=80, --safe, --py36]
+        args: [--quiet, --line-length=80, --safe, --py36]
