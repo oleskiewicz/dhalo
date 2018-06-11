@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import logging
 import logging.config
+import os
 import sys
 
 import defopt
@@ -8,7 +9,14 @@ import pandas as pd
 import yaml
 from dhalo import DHaloReader
 
-logging.config.dictConfig(yaml.load(open("./logging.yaml", "r")))
+logging.config.dictConfig(
+    yaml.load(
+        open(
+            os.path.join(os.path.dirname(__file__) + "/../", "./logging.yaml"),
+            "r",
+        )
+    )
+)
 logger = logging.getLogger(__name__)
 
 
