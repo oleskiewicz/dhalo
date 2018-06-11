@@ -4,9 +4,10 @@ pages:
   script:
     - pip install sphinx
     - apk --no-cache add make
-    - cd ./docs; make html
+    - cd docs; make html
+    - mv docs/build/html public/
   artifacts:
     paths:
-      - docs/build/html
+      - public
   only:
     - master
