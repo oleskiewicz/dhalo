@@ -1,12 +1,21 @@
 """DHalo Reader module.
 """
 #!/usr/bin/env python
+import os
 import yaml
 import logging
 import numpy as np
 import pandas as pd
 import h5py
 
+logging.config.dictConfig(
+    yaml.load(
+        open(
+            os.path.join(os.path.dirname(__file__) + "/../", "./logging.yaml"),
+            "r",
+        )
+    )
+)
 logger = logging.getLogger(__name__)
 
 
@@ -66,22 +75,21 @@ class DHaloReader(object):
         """
 
         if self.filename.endswith(".pkl"):
+            logger.debug("Loading pickle file %s", self.filename)
             data = pd.read_pickle(self.filename)
 
         elif self.filename.endswith(".hdf5"):
+            logger.debug("Loading HDF5 file %s", self.filename)
             with h5py.File(self.filename, "r") as data_file:
 
                 data = pd.DataFrame(
-                    zip(
-                        *[
-                            data_file["/haloTrees/%s" % column].values
-                            for column in self.columns
-                        ]
-                    ),
-                    dtype=[(column, "int64") for column in self.columns],
-                )
+                    {
+                        column: data_file["/haloTrees/%s" % column].value
+                        for column in self.columns
+                    }
+                ).set_index("nodeIndex")
 
-                with open("cache.pkl", "w") as pickle_file:
+                with open("./data/cache.pkl", "w") as pickle_file:
                     data.to_pickle(pickle_file)
 
         else:
@@ -178,7 +186,7 @@ class DHaloReader(object):
 
         progenitors = pd.concat(
             [
-                self.data[self.data.index == index],
+                self.data.loc[index],
                 self.data.loc[self.halo_progenitor_ids(index)],
             ]
         )

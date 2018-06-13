@@ -6,4 +6,4 @@
 #BSUB -oo ./log/log_%J.txt
 #BSUB -eo ./log/err_%J.txt
 
-make cmh
+make
