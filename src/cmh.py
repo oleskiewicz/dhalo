@@ -13,7 +13,7 @@ from src.util import pmap
 logging.config.dictConfig(
     yaml.load(
         open(
-            os.path.join(os.path.dirname(__file__) + "/../", "./logging.yaml"),
+            os.path.join(os.path.dirname(__file__) + "/../", "./.logging.yaml"),
             "r",
         )
     )
