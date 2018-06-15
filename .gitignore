@@ -1,3 +1,4 @@
-data/
-out/
-docs/build/
+/data
+/out
+/log
+/docs/build

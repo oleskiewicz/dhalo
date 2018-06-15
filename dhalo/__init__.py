@@ -4,6 +4,7 @@
 import os
 import yaml
 import logging
+import logging.config
 import numpy as np
 import pandas as pd
 import h5py
@@ -11,7 +12,7 @@ import h5py
 logging.config.dictConfig(
     yaml.load(
         open(
-            os.path.join(os.path.dirname(__file__) + "/../", "./logging.yaml"),
+            os.path.join(os.path.dirname(__file__) + "/../", "./.logging.yaml"),
             "r",
         )
     )
@@ -104,7 +105,6 @@ class DHaloReader(object):
         :return numpy.ndarray: row of argument ``d`` of the given ``nodeIndex``
         """
         try:
-            # halo = self.data.loc[index]
             halo = self.data.loc[index]
         except KeyError:
             raise IndexError(
