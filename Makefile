@@ -14,7 +14,7 @@ ids: ./out/ids.$(SNAP).$(GRAV).txt
 
 ./out/cmh.$(SNAP).f$(NFW_f).$(GRAV).csv: ./src/cmh.py ./out/ids.$(SNAP).$(GRAV).txt
 	$< \
-	  $(DATA) \
-	  ./out/ids.$(SNAP).$(GRAV).txt \
-	  $(shell echo "$(NFW_f) / 100" | bc -l) \
-	  > $@
+		$(DATA) \
+		./out/ids.$(SNAP).$(GRAV).txt \
+		$(shell echo "$(NFW_f) / 100" | bc -l) \
+		> $@
