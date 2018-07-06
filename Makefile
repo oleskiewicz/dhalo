@@ -1,10 +1,8 @@
-FINAL_SNAP:=045
+FINAL_SNAP:=075
 GRAV?=GR
-SNAP?=013
+SNAP?=075
 NFW_f?=002
 DATA:=./out/trees/$(GRAV)/treedir_$(FINAL_SNAP)/tree_$(FINAL_SNAP).0.hdf5
-
-SNAPS:=045 032 022 009 0
 
 cmh: ./out/cmh.$(SNAP).f$(NFW_f).$(GRAV).csv
 ids: ./out/ids.$(SNAP).$(GRAV).txt
