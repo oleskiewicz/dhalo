@@ -1,3 +1,4 @@
+pyyaml
 defopt
 h5py
 numpy
