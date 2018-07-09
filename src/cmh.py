@@ -1,11 +1,12 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import logging
 import logging.config
 import os
 import sys
 
-import defopt
 import pandas as pd
+
+import defopt
 import yaml
 from dhalo import DHaloReader
 from src.util import pmap

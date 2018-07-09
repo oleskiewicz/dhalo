@@ -1,11 +1,12 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import fcntl
 import logging
 import sys
 
-import defopt
 import numpy as np
 import pandas as pd
+
+import defopt
 import src.dot
 import src.halo
 import src.read

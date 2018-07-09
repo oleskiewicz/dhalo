@@ -1,9 +1,10 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import logging
 import sys
 
-import halo
 import numpy as np
+
+import halo
 
 
 def node(h, m, m0, nfw_f):
