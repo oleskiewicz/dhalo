@@ -4,10 +4,10 @@ import logging.config
 import os
 import sys
 
-import pandas as pd
-
 import defopt
+import pandas as pd
 import yaml
+
 from dhalo import DHaloReader
 from src.util import pmap
 
