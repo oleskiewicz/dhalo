@@ -4,20 +4,11 @@
 import os
 import yaml
 import logging
-import logging.config
 import numpy as np
 import pandas as pd
 import h5py
 
-logging.config.dictConfig(
-    yaml.load(
-        open(
-            os.path.join(os.path.dirname(__file__) + "/../", "./.logging.yaml"),
-            "r",
-        )
-    )
-)
-logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.DEBUG)
 
 
 class DHaloReader(object):
@@ -76,11 +67,11 @@ class DHaloReader(object):
         """
 
         if self.filename.endswith(".pkl"):
-            logger.debug("Loading pickle file %s", self.filename)
+            logging.debug("Loading pickle file %s", self.filename)
             data = pd.read_pickle(self.filename)
 
         elif self.filename.endswith(".hdf5"):
-            logger.debug("Loading HDF5 file %s", self.filename)
+            logging.debug("Loading HDF5 file %s", self.filename)
             with h5py.File(self.filename, "r") as data_file:
 
                 data = pd.DataFrame(
@@ -90,8 +81,8 @@ class DHaloReader(object):
                     }
                 ).set_index("nodeIndex")
 
-                with open("./data/cache.pkl", "w") as pickle_file:
-                    data.to_pickle(pickle_file)
+                # with open("./data/cache.pkl", "w") as pickle_file:
+                #     data.to_pickle(pickle_file)
 
         else:
             raise TypeError("Unknown filetype %s" % self.filename)
@@ -127,7 +118,7 @@ class DHaloReader(object):
             _progenitor_ids = self.data[self.data["descendantHost"] == i][
                 "hostIndex"
             ].unique()
-            logger.debug(
+            logging.debug(
                 "Progenitors recursion: %d > %d (%d progenitors)",
                 index,
                 i,
@@ -142,7 +133,7 @@ class DHaloReader(object):
 
         rec(index)
 
-        logger.info(
+        logging.info(
             "%d progenitors found for halo %d", len(_progenitors), index
         )
         return _progenitors
@@ -178,7 +169,7 @@ class DHaloReader(object):
             snapshotNumber, sum(particleNumber)]``
         """
 
-        logger.debug("Looking for halo %d", index)
+        logging.debug("Looking for halo %d", index)
         halo = self.get_halo(index)
         if halo["hostIndex"] != halo.name:
             raise ValueError("Not a host halo!")
@@ -190,7 +181,7 @@ class DHaloReader(object):
                 self.data.loc[self.halo_progenitor_ids(index)],
             ]
         )
-        logger.debug(
+        logging.debug(
             "Built progenitor sub-table for halo %d of mass %d with %d members",
             index,
             m_0,
@@ -202,7 +193,7 @@ class DHaloReader(object):
             "particleNumber"
         ].sum()
         cmh["nodeIndex"] = index
-        logger.info(
+        logging.info(
             "Aggregated masses of %d valid progenitors of halo %d",
             progenitors.size,
             index,

@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 import logging
-import logging.config
 import os
 import sys
 
@@ -11,15 +10,7 @@ import yaml
 from dhalo import DHaloReader
 from src.util import pmap
 
-logging.config.dictConfig(
-    yaml.load(
-        open(
-            os.path.join(os.path.dirname(__file__) + "/../", "./.logging.yaml"),
-            "r",
-        )
-    )
-)
-logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.DEBUG)
 
 
 def main(data_file, ids_file, nfw_f=0.02):
@@ -31,10 +22,10 @@ def main(data_file, ids_file, nfw_f=0.02):
     """
 
     ids = pd.read_table(ids_file).values[:, 0]
-    logger.info("Loaded %d ids from %s", len(ids), ids_file)
+    logging.info("Loaded %d ids from %s", len(ids), ids_file)
 
     reader = DHaloReader(data_file)
-    logger.info("Initialised reader for %s file", data_file)
+    logging.info("Initialised reader for %s file", data_file)
 
     pd.concat(
         pmap(lambda i: reader.collapsed_mass_history(i, nfw_f), ids, 8)
@@ -47,7 +38,7 @@ def main(data_file, ids_file, nfw_f=0.02):
         sys.stdout, index=True, index_label="nodeIndex"
     )
 
-    logger.info("Pivoted CMHs for %d haloes, exiting.", len(ids))
+    logging.info("Pivoted CMHs for %d haloes, exiting.", len(ids))
 
 
 if __name__ == "__main__":

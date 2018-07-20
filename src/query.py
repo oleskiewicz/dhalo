@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 import logging
-import logging.config
 import os
 import sys
 
@@ -10,15 +9,7 @@ import yaml
 
 from dhalo import DHaloReader
 
-logging.config.dictConfig(
-    yaml.load(
-        open(
-            os.path.join(os.path.dirname(__file__) + "/../", "./.logging.yaml"),
-            "r",
-        )
-    )
-)
-logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.DEBUG)
 
 
 def main(filename, snapshot):
@@ -29,7 +20,7 @@ def main(filename, snapshot):
     """
 
     reader = DHaloReader(filename)
-    logger.debug("Initialised reader for %s file", filename)
+    logging.debug("Initialised reader for %s file", filename)
 
     data = reader.data[reader.data["snapshotNumber"] == snapshot]
 
