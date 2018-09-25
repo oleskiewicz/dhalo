@@ -1,11 +1,8 @@
 #!/usr/bin/env python3
 import logging
-import os
 
 import h5py
-import numpy as np
 import pandas as pd
-import yaml
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -126,7 +123,8 @@ class DHaloReader(object):
             if len(_progenitor_ids) == 0:
                 return
             for _progenitor_id in _progenitor_ids:
-                # if _progenitor_id not in _progenitors: # TODO: this only eliminates fly-byes
+                # TODO: this only eliminates fly-bys:
+                # if _progenitor_id not in _progenitors:
                 _progenitors.append(_progenitor_id)
                 rec(_progenitor_id)
 
@@ -140,8 +138,8 @@ class DHaloReader(object):
     def halo_host(self, index):
         """Finds host of halo.
 
-        Recursively continues until hits the main halo, in case of multiply embedded
-        subhaloes.
+        Recursively continues until hits the main halo, in case of multiply
+        embedded subhaloes.
         """
         halo = self.get_halo(index)
         return (
@@ -181,7 +179,7 @@ class DHaloReader(object):
             ]
         )
         logging.debug(
-            "Built progenitor sub-table for halo %d of mass %d with %d members",
+            "built prog sub-table [%d] (m=%d, %d progs)",
             index,
             m_0,
             progenitors.size,

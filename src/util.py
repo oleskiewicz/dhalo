@@ -8,7 +8,7 @@ def pmap(f, xs, nprocs=mp.cpu_count()):
     As seen in: <https://stackoverflow.com/a/16071616>.
     """
 
-    def fun(f, q_in, q_out):
+    def __f(f, q_in, q_out):
         while True:
             i, x = q_in.get()
             if i is None:
@@ -19,7 +19,7 @@ def pmap(f, xs, nprocs=mp.cpu_count()):
     q_out = mp.Queue()
 
     proc = [
-        mp.Process(target=fun, args=(f, q_in, q_out)) for _ in xrange(nprocs)
+        mp.Process(target=__f, args=(f, q_in, q_out)) for _ in range(nprocs)
     ]
 
     for p in proc:
@@ -27,9 +27,13 @@ def pmap(f, xs, nprocs=mp.cpu_count()):
         p.start()
 
     sent = [q_in.put((i, x)) for i, x in enumerate(xs)]
-    [q_in.put((None, None)) for _ in xrange(nprocs)]
-    res = [q_out.get() for _ in xrange(len(sent))]
 
-    [p.join() for p in proc]
+    for _ in range(nprocs):
+        q_in.put((None, None))
+
+    res = [q_out.get() for _ in range(len(sent))]
+
+    for p in proc:
+        p.join()
 
     return [x for i, x in res]

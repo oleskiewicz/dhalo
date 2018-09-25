@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-import fcntl
 import logging
 import sys
 
@@ -32,8 +31,8 @@ def build(i, data):
 
     :param int i: ``nodeIndex`` of the starting halo
     :param numpy.ndarray data: dataset provided by :mod:`src.read` module
-    :return List[int, List[]]: merger tree in a deeply mebedded format, rooted at
-        the starting halo
+    :return List[int, List[]]: merger tree in a deeply mebedded format, rooted
+        at the starting halo
     """
 
     h = src.halo.get(i, data)
@@ -41,7 +40,12 @@ def build(i, data):
         raise ValueError("Not a host halo!")
 
     progenitors = np.unique(
-        [prog for prog in d[d["descendantHost"] == h["nodeIndex"]]["hostIndex"]]
+        [
+            prog
+            for prog in data[data["descendantHost"] == h["nodeIndex"]][
+                "hostIndex"
+            ]
+        ]
     )
 
     logging.debug(
