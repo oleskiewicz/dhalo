@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/sh -ex
 #BSUB -P durham
 #BSUB -q shm4
 #BSUB -n 8
