@@ -16,3 +16,5 @@ ids: ./out/ids.$(SNAP).$(GRAV).txt
 		./out/ids.$(SNAP).$(GRAV).txt \
 		$(shell echo "$(NFW_f) / 100" | bc -l) \
 		> $@
+
+.PHONY: ids cmh
