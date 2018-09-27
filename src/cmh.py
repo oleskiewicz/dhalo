@@ -6,7 +6,7 @@ import defopt
 import pandas as pd
 
 from dhalo import DHaloReader
-from src.util import pmap
+from util import pmap
 
 logging.basicConfig(level=logging.DEBUG)
 

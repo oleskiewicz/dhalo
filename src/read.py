@@ -1,14 +1,10 @@
 #!/usr/bin/env python
 import logging
 import sys
-from logging.config import fileConfig
 
 import h5py
 import numpy as np
 import pandas as pd
-
-fileConfig("./log.conf")
-log = logging.getLogger()
 
 columns = [
     [
@@ -140,6 +136,6 @@ def retrieve(file_numpy):
 
 if __name__ == "__main__":
     file_hdf5, file_numpy = sys.argv[1], sys.argv[2]
-    log.info("Reading %s" % file_hdf5)
+    logging.info("Reading %s" % file_hdf5)
     d = data(file_hdf5, file_numpy)
-    log.info("Saved to %s" % file_numpy)
+    logging.info("Saved to %s" % file_numpy)

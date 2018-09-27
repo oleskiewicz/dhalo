@@ -6,9 +6,7 @@ import defopt
 import numpy as np
 import pandas as pd
 
-import src.dot
-import src.halo
-import src.read
+from src import dot, halo, read
 
 logging.basicConfig(level=logging.DEBUG)
 

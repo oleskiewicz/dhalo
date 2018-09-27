@@ -3,7 +3,7 @@ import sys
 
 import numpy as np
 
-from . import read
+from src import read
 
 
 def get(h, d):

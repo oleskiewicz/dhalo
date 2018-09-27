@@ -5,7 +5,7 @@ import sys
 
 import numpy as np
 
-from . import halo, read
+from src import halo, read
 
 
 def build(id, data):

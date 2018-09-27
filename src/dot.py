@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from . import halo
+from src import halo
 
 
 def node(h, m, m0, nfw_f):
